@@ -1,26 +1,32 @@
-// assign pins
-int loader_motor_pin_1 = 2;
-int loader_motor_pin_2 = 3;
-int flywheel_motor_pin_1 = 4;
-int flywheel_motor_pin_2 = 5;
+#include <Servo.h>
 
-// assign durations
-int loader_motor_duration = 5000;
+// assign pins
+int flywheel_motor_pin_1 = 2;
+int flywheel_motor_pin_2 = 3;
+int servo_pin = 9;
+int break_beam = 10;
+
+// assign flywheel duration
 int flywheel_motor_duration = 3000;
 
 // initialize command
 String command;
 
+// initialize servo
+Servo loading_servo;
+
 void setup() {
-  // establish serial communication and set pins
+  // establish serial communication and pins
   Serial.begin(9600);
-  pinMode(loader_motor_pin_1, OUTPUT);
-  pinMode(loader_motor_pin_2, OUTPUT);
+  loading_servo.attach(servo_pin);
   pinMode(flywheel_motor_pin_1, OUTPUT);
   pinMode(flywheel_motor_pin_2, OUTPUT);
+  pinMode(break_beam, INPUT_PULLUP);
 
-  // ensure all motors off at start
-  stop_motors();
+  // ensure motor is off at start
+  stop_flywheel_motor();
+  // Starting servo position
+  loading_servo.write(90);
 }
 
 void loop() {
@@ -37,41 +43,44 @@ void loop() {
 }
 
 void dispense_food(){
-  // motor used to load food into hopper
-  // rotation loader motor clockwise
-  digitalWrite(loader_motor_pin_1, HIGH);
-  digitalWrite(loader_motor_pin_2, LOW);
-  delay(loader_motor_duration);
+  // rotate servo to load food
+  load_food();
+
+  // fire food from hopper
+  shoot_food();
   
-  // rotation loader counter clockwise
-  digitalWrite(loader_motor_pin_1, LOW);
-  digitalWrite(loader_motor_pin_2, HIGH);
-  delay(loader_motor_duration);
+  // stop flywheel motor
+  stop_flywheel_motor();
+}
 
-  // stop loader motor
-  stop_loader_motor();
+void load_food(){
+  treat_loaded = digitalRead(break_beam)
+  while (treat_loaded == HIGH){
+    // move servo clockwise
+    loading_servo.write(0);
+    delay(700);
+    // Move servo counterclockwise
+    loading_servo.write(180);
+    delay(700);
+    // check if beam is broken
+    treat_loaded = digitalRead(break_beam)
+  }
+   // Move servo back to start
+   loading_servo.write(90);
+   delay(700);
+}
 
+void shoot_food(){
   // spin flywheel motor to dispense 
   // food from hopper
   digitalWrite(flywheel_motor_pin_1, LOW);
   digitalWrite(flywheel_motor_pin_2, HIGH);
-
   // run flywheel dispensor motor
   delay(flywheel_motor_duration);
-
-  // stop all motors
-  stop_motors();
 }
 
-void stop_loader_motor(){
-  // stop loader motors
-  digitalWrite(loader_motor_pin_1, LOW);
-  digitalWrite(loader_motor_pin_2, LOW);
-}
-
-void stop_motors(){
-  // stop all motors
-  stop_loader_motor();
+void stop_flywheel_motor(){
+  // stop flywheel motor
   digitalWrite(flywheel_motor_pin_1, LOW);
   digitalWrite(flywheel_motor_pin_2, LOW);
 }
