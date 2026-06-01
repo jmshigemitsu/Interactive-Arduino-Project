@@ -1,10 +1,13 @@
 #include <Servo.h>
 
 // assign pins
-int flywheel_motor_pin_1 = 2;
-int flywheel_motor_pin_2 = 3;
+int break_beam = 2;
+int flywheel_motor_pin_1 = 3;
+int flywheel_motor_pin_2 = 4;
 int servo_pin = 9;
-int break_beam = 10;
+
+// boolean check for sensor
+volatile boolean last_sensor_state = false;
 
 // assign flywheel duration
 int flywheel_motor_duration = 3000;
@@ -27,7 +30,11 @@ void setup() {
   stop_flywheel_motor();
   // Starting servo position
   loading_servo.write(90);
+  
+  // interrupt
+  attachInterrupt(digitalPinToInterrupt(break_beam), sensor_triggered, FALLING);
 }
+
 
 void loop() {
   // wait for serial port to open
@@ -42,6 +49,11 @@ void loop() {
   } 
 }
 
+void sensor_triggered()
+{
+  last_sensor_state = true;
+}
+
 void dispense_food(){
   // rotate servo to load food
   load_food();
@@ -54,16 +66,18 @@ void dispense_food(){
 }
 
 void load_food(){
-  treat_loaded = digitalRead(break_beam)
-  while (treat_loaded == HIGH){
+  // set defaults
+  last_sensor_state = false;
+  unsigned long previousMillis = millis();
+
+  // if the beam was inturrupted or time out exit while loop
+  while (!last_sensor_state && millis() - previousMillis < 10000){
     // move servo clockwise
     loading_servo.write(0);
     delay(700);
     // Move servo counterclockwise
     loading_servo.write(180);
     delay(700);
-    // check if beam is broken
-    treat_loaded = digitalRead(break_beam)
   }
    // Move servo back to start
    loading_servo.write(90);
