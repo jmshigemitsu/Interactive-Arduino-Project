@@ -25,7 +25,8 @@ void setup() {
 
 void loop() {
   while (!Serial.available()); 
-  command = Serial.readString(); 
+  command = Serial.readString();
+  command.trim(); 
   if (command == "DISPENSE"){
     // dispense food
     dispense_food();

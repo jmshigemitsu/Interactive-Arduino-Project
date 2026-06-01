@@ -1,4 +1,5 @@
 import serial
+import time
 
 port = 'COM5'
 baud_rate = 9600
@@ -6,6 +7,7 @@ baud_rate = 9600
 def dispense_food():
     try:
         with serial.Serial(port,baud_rate,timeout=2) as arduino:
+            time.sleep(2)
             arduino.write(b'DISPENSE\n')
     except serial.SerialException as e:
         print(f"serial error: {e}")
