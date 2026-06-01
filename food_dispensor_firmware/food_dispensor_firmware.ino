@@ -24,11 +24,14 @@ void setup() {
 }
 
 void loop() {
+  // wait for serial port to open
   while (!Serial.available()); 
+  // read in command from port and trim it
   command = Serial.readString();
-  command.trim(); 
+  command.trim();
+  // if command is DISPENSE then run
+  // dispense food method 
   if (command == "DISPENSE"){
-    // dispense food
     dispense_food();
   } 
 }
