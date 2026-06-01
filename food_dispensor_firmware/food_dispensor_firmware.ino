@@ -5,6 +5,8 @@ int break_beam = 2;
 int flywheel_motor_pin_1 = 3;
 int flywheel_motor_pin_2 = 4;
 int servo_pin = 9;
+int speed_pin = 10;
+int speed = 150;
 
 // boolean check for sensor
 volatile boolean last_sensor_state = false;
@@ -24,6 +26,7 @@ void setup() {
   loading_servo.attach(servo_pin);
   pinMode(flywheel_motor_pin_1, OUTPUT);
   pinMode(flywheel_motor_pin_2, OUTPUT);
+  pinMode(speed_pin,OUTPUT);
   pinMode(break_beam, INPUT_PULLUP);
 
   // ensure motor is off at start
@@ -87,6 +90,9 @@ void load_food(){
 void shoot_food(){
   // spin flywheel motor to dispense 
   // food from hopper
+  // set motor speed
+  analogWrite(speed_pin, speed);
+  // spin motor
   digitalWrite(flywheel_motor_pin_1, LOW);
   digitalWrite(flywheel_motor_pin_2, HIGH);
   // run flywheel dispensor motor
