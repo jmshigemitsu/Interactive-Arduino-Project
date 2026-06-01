@@ -8,6 +8,9 @@ int flywheel_motor_pin_2 = 5;
 int loader_motor_duration = 5000;
 int flywheel_motor_duration = 3000;
 
+// initialize command
+String command;
+
 void setup() {
   // establish serial communication and set pins
   Serial.begin(9600);
@@ -21,8 +24,12 @@ void setup() {
 }
 
 void loop() {
-  // dispense food
-  dispense_food();
+  while (!Serial.available()); 
+  command = Serial.readString(); 
+  if (command == "DISPENSE"){
+    // dispense food
+    dispense_food();
+  } 
 }
 
 void dispense_food(){
