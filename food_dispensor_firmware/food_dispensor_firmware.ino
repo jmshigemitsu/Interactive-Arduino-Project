@@ -32,7 +32,7 @@ void setup() {
   // ensure motor is off at start
   stop_flywheel_motor();
   // Starting servo position
-  loading_servo.write(90);
+  loading_servo.write(0);
   
   // interrupt
   attachInterrupt(digitalPinToInterrupt(break_beam), sensor_triggered, FALLING);
@@ -76,14 +76,14 @@ void load_food(){
   // if the beam was inturrupted or time out exit while loop
   while (!last_sensor_state && millis() - previousMillis < 10000){
     // move servo clockwise
-    loading_servo.write(0);
+    loading_servo.write(180);
     delay(700);
     // Move servo counterclockwise
-    loading_servo.write(180);
+    loading_servo.write(0);
     delay(700);
   }
    // Move servo back to start
-   loading_servo.write(90);
+   loading_servo.write(0);
    delay(700);
 }
 
