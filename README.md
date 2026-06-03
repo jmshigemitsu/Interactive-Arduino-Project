@@ -1,6 +1,6 @@
 # Interactive Pet Food Dispenser
 
-An Arduino-powered retrofit of a broken pet food dispenser that can be triggered from a live streaming chat. The original dispenser mechanism was modified by replacing one of the motors with a servo-driven loader, adding a break beam sensor to detect when food is ready to be dispensed, and using a flywheel motor to launch the food.
+An Arduino-powered retrofit of a broken pet food dispenser that can be triggered from a live streaming chat. The original dispenser mechanism was modified by replacing one of the motors with a servor, adding a break beam sensor to detect when food is ready to be dispensed, and using a flywheel motor to launch the food.
 
 ![Wiring Diagram](images/project.jpg)
 
