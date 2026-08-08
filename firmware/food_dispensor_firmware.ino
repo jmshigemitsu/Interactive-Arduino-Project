@@ -43,13 +43,17 @@ void loop() {
   // wait for serial port to open
   while (!Serial.available()); 
   // read in command from port and trim it
-  command = Serial.readString();
+  command = Serial.readStringUntil('\n');
   command.trim();
-  // if command is DISPENSE then run
-  // dispense food method 
-  if (command == "DISPENSE"){
+  if (command == "PING") {
+    Serial.println("PONG");
+  } else if (command == "DISPENSE") {
+    // dispense food method
     dispense_food();
-  } 
+    Serial.println("DISPENSE_CMD_OK");
+  } else {
+    Serial.println("DISPENSE_CMD_ERROR");
+  }
 }
 
 void sensor_triggered()
