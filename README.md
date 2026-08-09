@@ -40,3 +40,29 @@ The goal of this project was to take a broken pet food dispenser and rebuild it 
 ## Future Improvements
 
 - Replace the breadboard wiring with soldered connections or a protoboard for a more permanent setup.
+
+## Hardware test automation (current phase)
+
+The Python application now talks to the Arduino through `FoodDispenser` in
+`dispenser.py`; test code uses this API instead of sending serial bytes itself.
+The current protocol is line based:
+
+| Command | Expected response |
+| --- | --- |
+| `PING` | `PONG` |
+| `DISPENSE` | `DISPENSE_OK` |
+
+`main.py` remains the application entry point and sends a dispense request. The
+pytest fixture in `tests/conftest.py` loads `SERIAL_PORT` and `BAUD_RATE` from
+`.env`, creates a fresh connection for each hardware test, and closes it during
+cleanup. The first acceptance check is `tests/test_connection.py`, which calls
+`dispenser.ping()`.
+
+1. Upload `firmware/food_dispensor_firmware.ino` to the Arduino.
+2. Set the board's serial port and baud rate in `.env` (this local file is not
+   committed).
+3. Run `./.venv/Scripts/python.exe -m pytest` from PowerShell.
+
+This is a hardware-in-the-loop-style connection test: it validates the real
+serial link and firmware response. Simulation, motor/servo/sensor acceptance
+criteria, and CI are intentionally deferred until this foundation is proven.

@@ -40,8 +40,10 @@ void setup() {
 
 
 void loop() {
-  // wait for serial port to open
-  while (!Serial.available()); 
+  if (!Serial.available()) {
+    return;
+  }
+
   // read in command from port and trim it
   command = Serial.readStringUntil('\n');
   command.trim();
@@ -50,9 +52,9 @@ void loop() {
   } else if (command == "DISPENSE") {
     // dispense food method
     dispense_food();
-    Serial.println("DISPENSE_CMD_OK");
+    Serial.println("DISPENSE_OK");
   } else {
-    Serial.println("DISPENSE_CMD_ERROR");
+    Serial.println("ERROR_UNKNOWN_COMMAND");
   }
 }
 
